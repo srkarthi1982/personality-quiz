@@ -1,0 +1,35 @@
+---
+import AppShell from "../layouts/AppShell.astro";
+import {
+  AvContainer,
+  AvCard,
+  AvButton,
+  AvFeatureList,
+  AvFeatureItem
+} from "@ansiversa/components";
+---
+
+<AppShell title="Personality Quiz" description="Personality Quiz – powered by Ansiversa.">
+
+  <AvContainer class="mt-10">
+    <AvCard>
+      <h1 class="text-3xl font-semibold mb-6">🚀 Welcome to Personality Quiz</h1>
+
+      <p class="mb-6">
+        This project uses the shared <code>@ansiversa/components</code> package with
+        global layouts, styles, and premium UI components.
+      </p>
+
+      <AvButton>Get Started</AvButton>
+    </AvCard>
+  </AvContainer>
+
+  <AvContainer class="mt-16">
+    <AvFeatureList>
+      <AvFeatureItem title="Shared Layouts" description="Uses WebLayout and AuthLayout from the package." />
+      <AvFeatureItem title="Design System" description="Imports global.css from the components library." />
+      <AvFeatureItem title="100% Consistency" description="All Ansiversa apps follow the same standard." />
+    </AvFeatureList>
+  </AvContainer>
+
+</AppShell>
