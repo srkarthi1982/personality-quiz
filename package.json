@@ -1,18 +1,23 @@
 {
   "name": "@ansiversa/app-starter",
   "version": "1.0.0",
-  "private": true,
+  "private": false,
+  "type": "module",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "astro dev --remote",
     "build": "astro build --remote",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.0.0",
     "@ansiversa/components": "^0.0.10",
+    "@astrojs/alpinejs": "^0.4.9",
+    "@astrojs/db": "^0.18.3",
+    "@astrojs/vercel": "^9.0.2",
     "@tailwindcss/vite": "^4.1.17",
-    "tailwindcss": "^4.1.17",
-    "autoprefixer": "^10.4.0",
-    "postcss": "^8.4.0"
+    "@types/alpinejs": "^3.13.11",
+    "alpinejs": "^3.15.2",
+    "astro": "^5.16.2",
+    "tailwindcss": "^4.1.17"
   }
 }
