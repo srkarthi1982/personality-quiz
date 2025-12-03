@@ -1,55 +1,51 @@
 // @ts-nocheck
 import { defineMiddleware } from "astro:middleware";
+import { SESSION_COOKIE_NAME, verifySessionToken } from "./lib/auth";
 
-const SESSION_COOKIE_NAME =
-  import.meta.env.SESSION_COOKIE_NAME ?? "ansiversa_session";
+// Primary domain for Ansiversa (used to build the root app URL)
+const COOKIE_DOMAIN =
+  import.meta.env.ANSIVERSA_COOKIE_DOMAIN ?? "ansiversa.com";
 
+// Root app URL – prefers explicit PUBLIC_ROOT_APP_URL if you ever set it,
+// otherwise builds from ANSIVERSA_COOKIE_DOMAIN, with a safe default.
 const ROOT_APP_URL =
-  import.meta.env.PUBLIC_ROOT_APP_URL ?? "https://ansiversa.com";
-
-function parseCookies(header: string | null): Record<string, string> {
-  const cookies: Record<string, string> = {};
-  if (!header) return cookies;
-
-  const parts = header.split(";");
-  for (const part of parts) {
-    const [name, ...rest] = part.trim().split("=");
-    if (!name) continue;
-    cookies[name] = decodeURIComponent(rest.join("=") ?? "");
-  }
-  return cookies;
-}
+  import.meta.env.PUBLIC_ROOT_APP_URL ?? `https://${COOKIE_DOMAIN}`;
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const { request, locals } = context;
-  const url = new URL(request.url);
+  const { cookies } = context;
+  const locals = context.locals as any;
 
-  const cookieHeader = request.headers.get("cookie");
-  const cookies = parseCookies(cookieHeader);
+  // Ensure predictable shape
+  locals.user = locals.user ?? null;
+  locals.sessionToken = null;
+  locals.isAuthenticated = false;
+  locals.rootAppUrl = ROOT_APP_URL;
 
-  const sessionRaw = cookies[SESSION_COOKIE_NAME] ?? null;
-  const isAuthenticated = Boolean(sessionRaw);
+  // 1) Read the shared session cookie (ans_session)
+  const sessionCookie = cookies.get(SESSION_COOKIE_NAME);
+  const token = sessionCookie?.value;
 
-  // Expose minimal user/session info to the app
-  (locals as any).user = {
-    isAuthenticated,
-    sessionRaw,
-  };
+  if (token) {
+    const payload = verifySessionToken(token);
 
-  // If user is already authenticated (via parent), skip /login
-  if (url.pathname === "/login" && isAuthenticated) {
-    return Response.redirect(new URL("/", url), 302);
+    if (payload) {
+      // 2) Populate locals.user in the same shape as parent app expects
+      locals.user = {
+        id: payload.userId,
+        email: payload.email,
+        // We don't have name in the token, so leave undefined
+        name: undefined,
+      };
+
+      locals.sessionToken = token;
+      locals.isAuthenticated = true;
+    } else {
+      // Invalid token → treat as logged out
+      locals.user = null;
+      locals.sessionToken = null;
+      locals.isAuthenticated = false;
+    }
   }
-
-  // Example: if you later want to protect routes inside the mini-app itself:
-  //
-  // if (url.pathname.startsWith("/app") && !isAuthenticated) {
-  //   const redirectTo = encodeURIComponent(url.toString());
-  //   return Response.redirect(
-  //     `${ROOT_APP_URL}/login?redirect=${redirectTo}`,
-  //     302
-  //   );
-  // }
 
   return next();
 });
