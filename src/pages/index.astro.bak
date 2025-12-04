@@ -1,0 +1,24 @@
+---
+import AppShell from "../layouts/AppShell.astro";
+import { AvContainer, AvButton } from "@ansiversa/components";
+---
+
+<AppShell title="Personality Quiz" description="Personality Quiz – powered by Ansiversa.">
+    <!-- Hero -->
+  <section class="av-hero">
+    <AvContainer size="narrow" className="av-hero__content--narrow">
+      <div class="av-hero__content">
+        <div class="av-kicker">
+          <span>Ansiversa Ecosystem</span>
+        </div>
+        <h1 class="av-gradient-text">Personality Quiz</h1>
+        <p>
+          This project uses the shared @ansiversa/components package and global design system. Use this starter as a base for your next mini-app in the Ansiversa universe.
+        </p>
+      </div>
+      <div class="av-cta-row">
+        <AvButton href="https://www.ansiversa.com">Visit Ansiversa</AvButton>
+      </div>
+    </AvContainer>
+  </section>
+</AppShell>

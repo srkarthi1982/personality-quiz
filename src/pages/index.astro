@@ -1,23 +1,92 @@
 ---
 import AppShell from "../layouts/AppShell.astro";
 import { AvContainer, AvButton } from "@ansiversa/components";
+
+const title = "Personality Quiz – Ansiversa";
+const description = "Create playful personality quizzes.";
 ---
 
-<AppShell title="Personality Quiz" description="Personality Quiz – powered by Ansiversa.">
-    <!-- Hero -->
+<AppShell title={title} description={description}>
+  <!-- Hero -->
   <section class="av-hero">
     <AvContainer size="narrow" className="av-hero__content--narrow">
       <div class="av-hero__content">
         <div class="av-kicker">
-          <span>Ansiversa Ecosystem</span>
+          <span>Fun & Play · Ansiversa Mini App</span>
         </div>
         <h1 class="av-gradient-text">Personality Quiz</h1>
         <p>
-          This project uses the shared @ansiversa/components package and global design system. Use this starter as a base for your next mini-app in the Ansiversa universe.
+          Create playful personality quizzes.
         </p>
       </div>
       <div class="av-cta-row">
-        <AvButton href="https://www.ansiversa.com">Visit Ansiversa</AvButton>
+        <AvButton href="https://personality-quiz.ansiversa.com">Launch Personality</AvButton>
+      </div>
+    </AvContainer>
+  </section>
+
+  <!-- Problem -->
+  <section class="av-section">
+    <AvContainer size="narrow">
+      <div class="av-section-header">
+        <h2 class="av-section-title">The problem it solves</h2>
+        <p class="av-section-lead">
+          When it’s time to relax, you shouldn’t waste time setting things up.
+        </p>
+      </div>
+      <div class="av-section-body space-y-3 text-slate-300">
+        <p>Personality Quiz gives you instant, low-friction fun for yourself or your group.</p>
+      </div>
+    </AvContainer>
+  </section>
+
+  <!-- Why this mini app -->
+  <section class="av-section">
+    <AvContainer size="narrow">
+      <div class="av-section-header">
+        <h2 class="av-section-title">Why Personality Quiz feels different</h2>
+        <p class="av-section-lead">
+          A focused mini app inside the larger Ansiversa ecosystem.
+        </p>
+      </div>
+      <div class="av-section-body">
+        <ul class="space-y-2 text-slate-300 list-disc list-inside">
+          <li>Perfect for quick breaks, icebreakers, or casual sessions.</li>
+          <li>Super simple interface—no learning curve, just play.</li>
+          <li>Built to be shared and enjoyed again and again.</li>
+        </ul>
+      </div>
+    </AvContainer>
+  </section>
+
+  <!-- How it works -->
+  <section class="av-section">
+    <AvContainer size="narrow">
+      <div class="av-section-header">
+        <h2 class="av-section-title">How it works</h2>
+        <p class="av-section-lead">
+          Simple, clear steps so people can start in under a minute.
+        </p>
+      </div>
+      <ol class="av-section-body space-y-2 text-slate-300 list-decimal list-inside">
+        <li>Open Personality Quiz when you want a quick dose of fun.</li>
+        <li>Pick a mode, challenge, or idea that fits the moment.</li>
+        <li>Play, share, and come back tomorrow for something new.</li>
+      </ol>
+    </AvContainer>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="av-section">
+    <AvContainer size="narrow">
+      <div class="av-section-header">
+        <h2 class="av-section-title">Ready to try Personality Quiz?</h2>
+        <p class="av-section-lead">
+          Open the app, follow the simple flow, and let it handle the heavy lifting.
+        </p>
+      </div>
+      <div class="av-cta-row">
+        <AvButton href="https://personality-quiz.ansiversa.com">Start with Personality</AvButton>
       </div>
     </AvContainer>
   </section>
