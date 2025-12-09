@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { defineMiddleware } from "astro:middleware";
 import { SESSION_COOKIE_NAME, verifySessionToken } from "./lib/auth";
 
@@ -12,8 +11,7 @@ const ROOT_APP_URL =
   import.meta.env.PUBLIC_ROOT_APP_URL ?? `https://${COOKIE_DOMAIN}`;
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const { cookies } = context;
-  const locals = context.locals as any;
+  const { cookies, locals } = context;
 
   // Ensure predictable shape
   locals.user = locals.user ?? null;
@@ -33,8 +31,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       locals.user = {
         id: payload.userId,
         email: payload.email,
-        // We don't have name in the token, so leave undefined
-        name: undefined,
+        name: payload.name,
       };
 
       locals.sessionToken = token;
