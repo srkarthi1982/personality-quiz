@@ -5,43 +5,59 @@ import { SESSION_COOKIE_NAME, verifySessionToken } from "./lib/auth";
 const COOKIE_DOMAIN =
   import.meta.env.ANSIVERSA_COOKIE_DOMAIN ?? "ansiversa.com";
 
-// Root app URL – prefers explicit PUBLIC_ROOT_APP_URL if you ever set it,
-// otherwise builds from ANSIVERSA_COOKIE_DOMAIN, with a safe default.
+// Root app URL
 const ROOT_APP_URL =
   import.meta.env.PUBLIC_ROOT_APP_URL ?? `https://${COOKIE_DOMAIN}`;
 
 export const onRequest = defineMiddleware(async (context, next) => {
-  const { cookies, locals } = context;
+  const { cookies, locals, url } = context;
+  const pathname = url.pathname;
+
+  // Allow static assets
+  if (
+    pathname.startsWith("/_astro/") ||
+    pathname.startsWith("/favicon") ||
+    pathname.startsWith("/robots.txt") ||
+    pathname.startsWith("/images/")
+  ) {
+    return next();
+  }
 
   // Ensure predictable shape
-  locals.user = locals.user ?? null;
+  locals.user = locals.user ?? undefined;
   locals.sessionToken = null;
   locals.isAuthenticated = false;
   locals.rootAppUrl = ROOT_APP_URL;
 
-  // 1) Read the shared session cookie (ans_session)
-  const sessionCookie = cookies.get(SESSION_COOKIE_NAME);
-  const token = sessionCookie?.value;
+  // 1) Read the shared session cookie
+  const token = cookies.get(SESSION_COOKIE_NAME)?.value;
 
   if (token) {
     const payload = verifySessionToken(token);
 
-    if (payload) {
-      // 2) Populate locals.user in the same shape as parent app expects
+    if (payload?.userId) {
       locals.user = {
         id: payload.userId,
         email: payload.email,
         name: payload.name,
+        roleId: payload.roleId ?? undefined,
+        stripeCustomerId: payload.stripeCustomerId ?? undefined,
       };
 
       locals.sessionToken = token;
       locals.isAuthenticated = true;
     } else {
-      // Invalid token → treat as logged out
-      locals.user = null;
+      locals.user = undefined;
       locals.sessionToken = null;
       locals.isAuthenticated = false;
     }
+  }
+
+  // ✅ ENFORCE AUTH (protect everything in mini-app)
+  if (!locals.isAuthenticated) {
+    const loginUrl = new URL("/login", ROOT_APP_URL);
+    loginUrl.searchParams.set("returnTo", url.toString()); // ✅ full URL back to quiz
+    return context.redirect(loginUrl.toString());
   }
 
   return next();

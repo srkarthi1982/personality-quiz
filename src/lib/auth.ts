@@ -10,7 +10,9 @@ export const SESSION_COOKIE_NAME = import.meta.env.SESSION_COOKIE_NAME ?? "ans_s
 export type SessionPayload = {
   userId: string;
   email: string;
-  name: string;
+  name?: string;
+  roleId?: string;
+  stripeCustomerId?: string;
   issuedAt: number;
 };
 

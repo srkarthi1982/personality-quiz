@@ -33,12 +33,16 @@ declare namespace App {
       id: string;
       email: string;
       name?: string;
+      roleId?: string;
+      stripeCustomerId?: string;
     };
+    sessionToken?: string | null;
+    isAuthenticated?: boolean;
+    rootAppUrl?: string;
   }
 }
 
 interface ImportMeta {
   readonly env: ImportMetaEnv;
 }
-
 
